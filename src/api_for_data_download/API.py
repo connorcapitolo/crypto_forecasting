@@ -63,8 +63,8 @@ def access_all_market():
     '''Obtaining of list of dictionaries for each of the 1642 coins on Binance; a dictionary is comprised of a symbol and price e.g. {'symbol': 'ETHBTC', 'price': '0.07427400'}
     '''
     client = Client(api_key, api_secret)
-    prices = client.get_all_tickers()
-    return prices
+    symbols_and_prices = client.get_all_tickers()
+    return symbols_and_prices
 
 
 def order_book(coin='BTCUSDT', limit=5000):
@@ -78,6 +78,8 @@ def order_book(coin='BTCUSDT', limit=5000):
 def query_data_for_long_time(coin='BTCUSDT', frequency='1w', request='candles'):
     '''
     Getting historical data for a certain coin based on a certain frequency level from the candles feature
+
+    Return: pandas Dataframe comprised of columns with candles features and rows that are frequency of observations
     '''
     # error checking
     if frequency not in {'1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M'}:
