@@ -1,0 +1,7 @@
+# misc
+.DS_Store
+secrets
+persistent-folder
+env.dev
+celerybeat-schedule
+docker-volumes/

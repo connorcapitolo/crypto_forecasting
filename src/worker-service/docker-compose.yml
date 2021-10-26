@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  crypbros-worker-service:
+        image: crypbros-worker-service
+        depends_on:
+            - crypbros-redis
+        volumes:
+            - .:/app
+  crypbros-redis:
+        image: redis
+        command: redis-server
+        volumes:
+            - ./docker-volumes/redis:/data
+        ports:
+            - 6379:6379
+networks:
+    default:
+        external:
+            name: crypbros

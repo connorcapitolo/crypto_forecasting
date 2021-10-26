@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+    crypbrosdb-client:
+        image: amacneil/dbmate
+        container_name: crypbrosdb-client
+        entrypoint: /bin/sh
+        depends_on:
+            - crypbrosdb-server
+        volumes:
+            - ./db:/db
+        environment: 
+            DATABASE_URL: "postgres://cryp:bros@crypbrosdb-server:5436/crypbrosdb?sslmode=disable"
+    crypbrosdb-server:
+        image: postgres
+        container_name: crypbrosdb-server
+        volumes:
+            - ./docker-volumes/postgres:/var/lib/postgresql/data
+        ports:
+            - 5436:5436
+        environment:
+            POSTGRES_USER: cryp
+            POSTGRES_PASSWORD: bros
+            POSTGRES_DB: crypbrosdb
+        command: -p 5436
+networks:
+    default:
+        external:
+            name: crypbros
