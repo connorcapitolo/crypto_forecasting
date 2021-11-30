@@ -48,6 +48,8 @@ Project Organization
       │   ├── milestone2_crypto_forecasting.pdf
       │   ├── milestone3_crypto_forecasting.pdf
       │   └── milestone4_crypto_forecasting.pdf
+      ├── misc
+          ├── milestone2_src
       └── test_project.py
 
 --------
