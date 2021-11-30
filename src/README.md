@@ -24,27 +24,59 @@ Install `Docker Desktop`
 Follow the [instructions](https://code.visualstudio.com/download) for your operating system.  
 If you already have a preferred text editor, skip this step.  
 
+Project Organization
+------------
+      .
+      ├── LICENSE
+      ├── Makefile
+      ├── README.md
+      ├── models
+      ├── notebooks
+      ├── references
+      ├── requirements.txt
+      ├── setup.py
+      ├── src
+      │   ├── __init__.py
+      │   └── database-server
+      │   └── common
+      |   └── worker-service
+      │   └── api-service
+      │   └── frontend-react
+      │   └── deployment
+      ├── submissions
+      │   ├── milestone1_crypto_forecasting.pdf
+      │   ├── milestone2_crypto_forecasting.pdf
+      │   ├── milestone3_crypto_forecasting.pdf
+      │   └── milestone4_crypto_forecasting.pdf
+      └── test_project.py
+
+--------
+
 ## Description of Various Components of Crypto Forecasting App
-
-### api-service
-- API allows for getting the data from the database in the backend to the frontend based on user input
-    -  performs the querying of the PostgreSQL database to obtain historical minute-by-minute data
-    -  adds new pairs (e.g. BNBBTC) to the backend *symbols* table when a user wants new information
-
-### frontend-react
-- REACT framework so that a user can easily select the pair (e.g. BNBBTC) they want to view, and get a graph that provides real-time minute-by-minute predictions
-
-### worker-service
-- makes sure that we have the most up-to-date data in the PostgreSQL database. Leverages multiprocessing in order to be able to fetch historical data for a new symbol while streaming online data at the same time
-    - when receiving a new pair (e.g. BNBUSDT), it will call the Binance API to get all historical data up to the present moment (historical fetching)
-    - for the pairs with completed historical data, we will fetch two types of online data: candle data and top of book data 
-This data will be written in the database
 
 ### database-server
 - used in development mode (with an equivalent for production) that stores the PostgreSQL database with the three tables: *symbols*, *price_history*, *top_of_book*
     - *symbols*: contains information about the pairs. This table basically contains the logs for our work: the pais that are being queried, their unique identifier, and the last timestamp at which we have some data for this pair. This last field allows us to fetch the missing data when the worker goes down
     - *price_history*: all historical Candles for each pair
     - *top_of_book*: contains the best bid/ask prices for every pair at every minute
+
+### common
+- dataaccess: scripts related to querying the three tables (*symbols*, *price_history*, *top_of_book*) in the Postgres database
+- datacollector: scripts related to querying data (both historical and live stream) from the Binance API to be placed in the Postgres database
+
+### worker-service
+- makes sure that we have the most up-to-date data in the PostgreSQL database; leverages multiprocessing in order to be able to fetch historical data for a new symbol while streaming online data at the same time
+    - when receiving a new pair (e.g. BNBUSDT), it will call the Binance API to get all historical data up to the present moment (historical fetching)
+    - for the pairs with complete historical data, fetch two types of online data: candle and top of book
+
+### api-service
+- API allows for getting the data from the database in the backend to the frontend based on user input
+    -  performs the querying of the PostgreSQL database to obtain historical minute-by-minute data
+    -  obtains the model from a GCS bucket (*to do*) for prediction
+    -  adds new pairs (e.g. BNBBTC) to the backend *symbols* table based on a user request
+
+### frontend-react
+- REACT framework so that a user can easily select the pair (e.g. BNBBTC) they want to view, and get a graph that provides real-time minute-by-minute predictions
 
 ### deployment
 - yml scripts for automatically starting up a VM instance on GCP, uploading containers to GRC, adding the containers from GCR to the VM, and running the crypto forecasting app on the GCP VM (in the cloud)
@@ -53,6 +85,9 @@ This data will be written in the database
 ## Example Development Workflow
 
 **When running on your local computer for development, always make sure to run database-server first as api-service and worker-service rely on it!**
+
+First step from the top-level directory is to enter the source code folder (everything will be based on being inside this folder)
+- `cd src`
 
 ### Run Database Server
 -  `cd database-server`
@@ -232,6 +267,59 @@ timestamp = :timestamp, updated_at = 1500604800000
 
    <img width="1419" alt="Screen Shot 2021-11-28 at 8 27 18 PM" src="https://user-images.githubusercontent.com/37121874/143795325-c5dc7c14-4f50-4a45-b938-9774f0313077.png">
 
+
    
 - Copy the External IP (either from Terminal or from GCP Compute Enginer page), and **paste** it into the browser to view the web app!
     - For some reason, doesn't work to just click on the External IP from the GCP Compute Engine page
+
+![Screen Shot 2021-11-30 at 12 15 38 PM](https://user-images.githubusercontent.com/37121874/144095334-048a6b3b-3872-4b73-858f-5b2776f91a22.png)
+
+## Step-by-step Guide for Deployment of Kubernetes Cluster
+
+These instructions directly follow the detailed, step-by-step guidelines from [Deploy Mushroom App to K8s Cluster](https://github.com/dlops-io/mushroom-app/tree/08-mushroom-app-k8s-deployment)
+
+### API's to enable in GCP for Project
+Search for each of these in the GCP search bar and click *enable* to utilize these APIs:
+
+- Compute Engine API
+- Service Usage API
+- Cloud Resource Manager API
+- Google Container Registry API
+- Kubernetes Engine API
+
+### Start Deployment Docker Container
+
+From the top-level directory in your command line: 
+- `cd src/deployment`
+- `sh docker-shell.sh` (must be using a non-Windows device)
+- Check versions of tools: `gcloud --version` `kubectl version --client`
+- Check if make sure you are authenticated to GCP: `gcloud auth list`
+
+### Build and Push Docker Containers to GCR
+This step is only required if you have NOT already done this
+
+```
+ansible-playbook deploy-docker-images.yml -i inventory.yml
+```
+
+### Deploy to Kubernetes Cluster
+
+We will use Ansible to create and deploy the crypto forecasting app into a Kubernetes Cluster; this step should take around 5-10 minutes to complete
+
+```
+ansible-playbook deploy-k8s-cluster.yml -i inventory.yml --extra-vars cluster_state=present
+```
+
+Example of the start of the output in the command line:
+
+<img width="1415" alt="Screen Shot 2021-11-30 at 11 41 00 AM" src="https://user-images.githubusercontent.com/37121874/144089611-c4d028cd-a50f-4f9b-a428-3dbb6890ac94.png">
+
+### View the App!
+
+- Copy the *nginx_ingress_ip* from *Create Cluster* task
+- Go to `http://<YOUR INGRESS IP>.sslip.io`
+
+Output:
+
+
+![Screen Shot 2021-11-30 at 11 45 16 AM](https://user-images.githubusercontent.com/37121874/144090246-8a70d009-2ba2-4778-bddf-26c35d7f396d.png)
