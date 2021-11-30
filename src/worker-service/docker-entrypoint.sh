@@ -4,31 +4,25 @@ echo "Container is running!!!"
 
 
 worker() {
-    celery -A worker.service worker --loglevel=debug -B "$@"
+    python -m worker.service_david
 }
 
 worker_production() {
-    pipenv run celery -A worker.service worker --loglevel=info --concurrency=8
+    pipenv run python -m worker.service_david
 }
 
 
 export -f worker
-
+# pipenv install binance
 echo -en "\033[92m
 The following commands are available:
     worker
-        Run the Celery Worker Service
+        Run the Worker Service
 \033[0m
 "
 
-case "${MODE}" in
-    worker)
-        worker_production
-        ;;
-    scheduler)
-        scheduler_production
-        ;;
-    *)
-        pipenv shell
-        ;;
-esac
+if [ "${DEV}" = 1 ]; then
+  pipenv shell
+else
+  worker_production
+fi

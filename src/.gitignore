@@ -1,7 +1,9 @@
 # misc
 .DS_Store
+*.log
 secrets
 persistent-folder
 env.dev
 celerybeat-schedule
 docker-volumes/
+mushroom-deployment-check/

@@ -4,8 +4,10 @@
 set -e
 
 # Read the settings file
+# I think we should stick this in a ./env.dev file
+# I also think this should be 'export BINANCE_API_KEY=$(BINANCE_API_KEY)' so that it isn't hard-coded in and other people can utilize their own APIs
 #source ./env.dev
-export IMAGE_NAME="crypbros-worker-service"
+export IMAGE_NAME="crypbros-api-service"
 export BASE_DIR=$(pwd)
 export COMMON_DIR=$(dirname "$(pwd)")/common
 export DATABASE_URL="postgres://cryp:bros@crypbrosdb-server:5436/crypbrosdb"
@@ -32,4 +34,6 @@ docker run --rm --name $IMAGE_NAME -ti \
 -e GCP_PROJECT=$GCP_PROJECT \
 -e GCP_ZONE=$GCP_ZONE \
 -e REDIS_URL=$REDIS_URL \
+-e BINANCE_API_KEY=$BINANCE_API_KEY \
+-e BINANCE_SECRET_KEY=$BINANCE_SECRET_KEY \
 --network crypbros $IMAGE_NAME

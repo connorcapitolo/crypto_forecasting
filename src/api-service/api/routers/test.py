@@ -8,6 +8,7 @@ from dataaccess import price_history as dataaccess_price_history
 from dataaccess.errors import RecordNotFoundError
 from datacollector import extract_data
 
+
 router = APIRouter()
 
 
@@ -113,11 +114,12 @@ async def get_price_history(
         print(symbol_db)
     except RecordNotFoundError:
         # Add the pair to DB
-        # add the historical fetch + update every minute
-        symbol_db = await dataaccess_symbols.create(name=symbol)
         
-        task_h = extract_data.load_price_history.delay(symbol, symbol_db['id'])
-
+        
+        # task_h = run_historical.load_price_history(symbol, symbol_db['id'])
+        # here, launch the script ? why not ? 
+        # after in order for the online fetching to pick up on it
+        symbol_db = await dataaccess_symbols.create(name=symbol)
 
         return {
             "task_historical": task_h.id,

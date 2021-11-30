@@ -6,12 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-celery = {extras = ["redis"],version = "*"}
 pandas = "*"
 databases = "*"
 asyncpg = "*"
 requests = "*"
 python-binance = "*"
+binance = "*"
+syncer = "*"
 nest-asyncio = "*"
 
 [requires]

@@ -52,7 +52,7 @@ RUN set -ex; \
 #RUN chmod 777 /app
 
 
-#USER app
+USER app
 WORKDIR /app
 
 # Install python packages
@@ -62,7 +62,8 @@ RUN pipenv sync
 
 # Add the rest of the source code. This is done last so we don't invalidate all
 # layers when we change a line of code.
-#ADD --chown=app:app . /app
+# we need this for the production mode; it was commented out and fine in dev mode since we were already mounting
+ADD --chown=app:app . /app
 
 # Entry point
 ENTRYPOINT ["/bin/bash","./docker-entrypoint.sh"]

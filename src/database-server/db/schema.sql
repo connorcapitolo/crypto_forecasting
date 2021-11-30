@@ -71,8 +71,10 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.symbols (
     id bigint NOT NULL,
     name text NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
     created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
-    updated_at bigint
+    updated_at bigint,
+    "timestamp" bigint
 );
 
 
@@ -96,6 +98,42 @@ ALTER SEQUENCE public.symbols_id_seq OWNED BY public.symbols.id;
 
 
 --
+-- Name: top_of_book; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.top_of_book (
+    id bigint NOT NULL,
+    symbol_id bigint NOT NULL,
+    best_bid numeric NOT NULL,
+    volume_best_bid numeric NOT NULL,
+    best_ask numeric NOT NULL,
+    volume_best_ask numeric NOT NULL,
+    time_reporting bigint NOT NULL,
+    created_at bigint DEFAULT (date_part('epoch'::text, clock_timestamp()) * (1000)::double precision) NOT NULL,
+    updated_at bigint
+);
+
+
+--
+-- Name: top_of_book_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.top_of_book_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: top_of_book_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.top_of_book_id_seq OWNED BY public.top_of_book.id;
+
+
+--
 -- Name: price_history id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -107,6 +145,13 @@ ALTER TABLE ONLY public.price_history ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.symbols ALTER COLUMN id SET DEFAULT nextval('public.symbols_id_seq'::regclass);
+
+
+--
+-- Name: top_of_book id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.top_of_book ALTER COLUMN id SET DEFAULT nextval('public.top_of_book_id_seq'::regclass);
 
 
 --
@@ -134,6 +179,14 @@ ALTER TABLE ONLY public.symbols
 
 
 --
+-- Name: top_of_book top_of_book_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.top_of_book
+    ADD CONSTRAINT top_of_book_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: symbols_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -146,6 +199,14 @@ CREATE UNIQUE INDEX symbols_name_index ON public.symbols USING btree (name);
 
 ALTER TABLE ONLY public.price_history
     ADD CONSTRAINT price_history_symbol_id_fkey FOREIGN KEY (symbol_id) REFERENCES public.symbols(id) ON DELETE CASCADE;
+
+
+--
+-- Name: top_of_book top_of_book_symbol_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.top_of_book
+    ADD CONSTRAINT top_of_book_symbol_id_fkey FOREIGN KEY (symbol_id) REFERENCES public.symbols(id) ON DELETE CASCADE;
 
 
 --

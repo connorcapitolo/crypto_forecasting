@@ -1,15 +1,15 @@
 import os
 import asyncio
-from celery.utils.log import get_task_logger
+#from celery.utils.log import get_task_logger
 
 import binance
 from binance import ThreadedWebsocketManager
 from typing import Optional, List, Dict, Callable, Any, Awaitable
 
-from datacollector.session import worker, async_task
 from dataaccess import symbols as dataaccess_symbols
 from dataaccess import price_history as dataaccess_price_history
 from datacollector.api import API
+import asyncio
 
 
 major_coins = ['BTC', 'ETH', 'BNB', 'USDT', 'BUSD', 'USD']
@@ -42,12 +42,10 @@ class WebsocketCoinMultiple:
         initial = len(symbols)
         coins = [symbol["name"] for symbol in symbols]
 
-        print('Will get streams for ', coins)
 
         for coin in coins:
             for major_coin in major_coins:
                 if major_coin in coin:
-                    print(coin, major_coin)
                     coin_modif = coin.replace(major_coin, '')
                     if coin.startswith(coin_modif):
                         reversed_coin = major_coin + coin_modif
@@ -59,11 +57,24 @@ class WebsocketCoinMultiple:
         coins += reversed_coins
         coins = list(set(coins).intersection(coins_market))[:initial]
 
+        ids = [await dataaccess_symbols.get_by_name(coin) for coin in coins] 
+
+        _id = []
+        _coin = []
+        for d in ids:
+            _id.append(d['id'])
+            _coin.append(d['name'])
+        
+        corresp = dict(zip(_coin, _id))
+
+
         for coin in coins:
-            stream = '{}@{}_{}'.format(coin.lower(),
+            stream_kline = '{}@{}_{}'.format(coin.lower(),
                                        self.data_type, self.update_frequency)
-            self.streams2symbols[stream] = coin
-            self.streams.append(stream)
+            stream_top_of_book = '{}@bookTicker'.format(coin.lower())
+            self.streams2symbols[stream_kline] = corresp[coin]
+            self.streams.append(stream_kline)
+            self.streams.append(stream_top_of_book)
 
         return self.streams
 
@@ -71,13 +82,15 @@ class WebsocketCoinMultiple:
         
         def on_message(message):
             # Save the data
+            # check if candle or top of the book data
             data = message["data"]
             information_kline = data.get('k')
+            stream = self.streams2symbols[message["stream"]]
             is_candle_closed = information_kline.get('x')
             if is_candle_closed == True:
                 print('Writing', data)
                 price_history_dict = {
-                    "symbol_id": self.streams2symbols[message["stream"]]["id"],
+                    'symbol_id': stream,
                     'open_time': information_kline.get('t'),
                     'open_price': float(information_kline.get('o')),
                     'high_price': float(information_kline.get('h')),
@@ -90,20 +103,19 @@ class WebsocketCoinMultiple:
                     'taker_buy_base_asset_volume': float(information_kline.get('V')),
                     'taker_buy_quote_asset_volume': float(information_kline.get('Q'))
                 }
-
                 save_price_history.delay(obj=price_history_dict)
-        self.bm.start_multiplex_socket(
-            streams=self.streams, callback=on_message)
+                self.stopService()
+            
+        self.bm.start_multiplex_socket(streams=self.streams, callback=on_message)
         self.bm.join()
 
     def stopService(self):
-        self.bm.close_all()
         self.bm.stop()
 
 
 multiple_websocket = None
 
-
+"""
 @async_task
 async def start_multiple_websocket():
     global multiple_websocket
@@ -117,13 +129,12 @@ async def start_multiple_websocket():
     await multiple_websocket.build_streams(_symbols)
     
     if len(multiple_websocket.streams) == 0:
-        raise ValueError('No streams')
+        print('No streams')
 
-    _missing_data_symbols = await dataaccess_symbols.get_inconsistent_symbols()
-    print('Inconsistencies for the following symbols {}'.format(_missing_data_symbols))
-
-    #await fix(_missing_data_symbols)
-    await multiple_websocket.addStreams()
+    else:
+        _missing_data_symbols = await dataaccess_symbols.get_inconsistent_symbols()
+        _fix(_missing_data_symbols)
+        await multiple_websocket.addStreams()
 
 @async_task
 async def add_streams():
@@ -132,6 +143,9 @@ async def add_streams():
     if multiple_websocket is None:
         multiple_websocket = WebsocketCoinMultiple()
 
+    else:
+        multiple_websocket.stop_multiple_websocket()
+
     # Build the streams from symbols from DB
     streams = []
     symbols = await dataaccess_symbols.browse()
@@ -139,14 +153,13 @@ async def add_streams():
 
     streams = await multiple_websocket.build_streams(symbols)
     print("streams:", streams)
-    await multiple_websocket.addStreams(streams)
+    await multiple_websocket.addStreams()
 
 
 @async_task
-async def save_price_history(obj):
-    print(obj)
-    await dataaccess_symbols.update(id=obj['symbol_id'])
+async def save_price_history(obj, timestamp=None):
     await dataaccess_price_history.create(**obj)
+    await dataaccess_symbols.update(id=obj['symbol_id'],timestamp=timestamp)
 
 
 @async_task
@@ -159,43 +172,44 @@ async def stop_multiple_websocket():
 
 @async_task
 async def _fix(inconsistent_symbols):
-    raise NotImplementedError
+    "Input format: list [(name, last updated time)]"
+    for _inconsistent_symbol in inconsistent_symbols:
+        load_price_history(_inconsistent_symbol['name'], _inconsistent_symbol['id'], _inconsistent_symbol['updated_at'])
 
 
 @async_task
 async def load_price_history(symbol, symbol_id, timestamp=None):
-    print("load_price_history")
-
+    
     api = API()
-
+    symbol = symbol.rstrip() # clean the symbol
+    
     if timestamp is None:
         timestamp = api.client._get_earliest_valid_timestamp(
             symbol=symbol, interval='1m')
-        timestamp_end = timestamp 
-        while timestamp_end < binance.client.convert_ts_str('now UTC'):
-            timestamp_end += 60000 * 1000
-            print('end fetch', timestamp_end)
-            bars = api.query_data_for_long_time(
-                pair=symbol, frequency='1m', start_timestamp=timestamp, end_timestamp=timestamp_end, verbose=False)
+    timestamp_end = timestamp 
+    while timestamp_end < binance.client.convert_ts_str('now UTC'):
+        timestamp_end += 60000 * 10000  # writing 10000 lines
+        print('end fetch', timestamp_end)
+        bars = api.query_data_for_long_time(
+            pair=symbol, frequency='1m', start_timestamp=timestamp, end_timestamp=timestamp_end, verbose=False)
 
-            for bar in bars:
-                price_history_dict = {
-                    "symbol_id": symbol_id,
-                    'open_time': bar[0],
-                    'open_price': float(bar[1]),
-                    'high_price': float(bar[2]),
-                    'low_price': float(bar[3]),
-                    'close_price': float(bar[4]),
-                    'volume_traded': float(bar[5]),
-                    'close_time': bar[6],
-                    'quote_asset_volume': float(bar[7]),
-                    'number_of_trades': bar[8],
-                    'taker_buy_base_asset_volume': float(bar[9]),
-                    'taker_buy_quote_asset_volume': float(bar[10])
-                }
-                save_price_history.delay(obj=price_history_dict)
+        for bar in bars:
+            price_history_dict = {
+                "symbol_id": symbol_id,
+                'open_time': bar[0],
+                'open_price': float(bar[1]),
+                'high_price': float(bar[2]),
+                'low_price': float(bar[3]),
+                'close_price': float(bar[4]),
+                'volume_traded': float(bar[5]),
+                'close_time': bar[6],
+                'quote_asset_volume': float(bar[7]),
+                'number_of_trades': bar[8],
+                'taker_buy_base_asset_volume': float(bar[9]),
+                'taker_buy_quote_asset_volume': float(bar[10])
+            }
+            save_price_history.delay(obj=price_history_dict, timestamp=timestamp_end)
 
-            timestamp = timestamp_end
+        timestamp = timestamp_end
 
-    # Add new symbol to the stream
-    add_streams()
+"""

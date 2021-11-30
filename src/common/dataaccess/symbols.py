@@ -1,6 +1,5 @@
 import os
 from typing import Any, Dict, List
-
 from dataaccess import utils as data_utils
 from dataaccess.session import database
 from dataaccess.errors import RecordNotFoundError
@@ -8,6 +7,7 @@ from dataaccess.errors import RecordNotFoundError
 
 async def browse(
     *,
+    paginate: bool = True,
     page_number: int = 0,
     page_size: int = 20
 ) -> List[Dict[str, Any]]:
@@ -16,18 +16,19 @@ async def browse(
     """
 
     query = """
-        select id,name
+        select id,name,status,timestamp
         from symbols
     """
 
     # order by
 
     # offset/limit
-    query += data_utils.build_pagination(page_number, page_size)
+    if paginate:
+        query += data_utils.build_pagination(page_number, page_size)
 
     values = []
 
-    print("query", query)
+    #print("query", query)
     result = await database.fetch_all(query)
 
     return [prep_data(row) for row in result]
@@ -73,7 +74,6 @@ async def get_by_name(name: str) -> Dict[str, Any]:
         "name": name
     }
 
-    print("query:", query, "values:", values)
     result = await database.fetch_one(query, values)
 
     if result is None:
@@ -114,7 +114,7 @@ async def create(*,
     return result
 
 
-async def update(id: int) -> Dict[str, Any]:
+async def update(id: int, status=None, timestamp=None) -> Dict[str, Any]:
     """
     Updates an existing row. Keyword arguments left at None will not be
     changed in the database. Returns the updated record as a dict. Raises if
@@ -128,9 +128,19 @@ async def update(id: int) -> Dict[str, Any]:
     changes: Dict[str, Any] = {
     }
 
-    change_list = ", ".join(key + " = :" + key for key in changes.keys())
-    change_list += "updated_at = EXTRACT(EPOCH FROM clock_timestamp()) * 1000"
+    if status is not None:
+        changes["status"] = status
 
+    if timestamp is not None:
+        changes["timestamp"] = timestamp
+
+    change_list = ", ".join(key + " = :" + key for key in changes.keys())
+
+    if timestamp is None:
+        change_list += ", updated_at = EXTRACT(EPOCH FROM clock_timestamp()) * 1000"
+    else:
+        change_list += ", updated_at = {}".format(timestamp)
+     
     print(change_list)
 
     result = await database.fetch_one(f"""
@@ -147,12 +157,21 @@ async def update(id: int) -> Dict[str, Any]:
     return result
 
 
-async def get_inconsistent_symbols():
-    result = await database.fetch_one(f"""
-        SELECT id, updated_at
-        FROM symbols
-        WHERE updated_at < EXTRACT(EPOCH FROM clock_timestamp()) * 1000 - 60000;""")
-    return result
+async def get_inconsistent_symbols(timestamp):
+
+    messages = await database.fetch_one(f"""
+        SELECT id, name, updated_at
+        FROM symbols""")
+
+    _inconsistent_symbols = []
+    messages = prep_data(messages)
+    # right now, only works for one element, todo: update the format when we have multiple streams
+
+    updated_id = messages.get('updated_at')
+    if updated_id is None or updated_id + 60000 < timestamp:
+        _inconsistent_symbols.append(messages)
+    return _inconsistent_symbols
+
 
 def prep_data(result) -> Dict[str, Any]:
     if result is None:

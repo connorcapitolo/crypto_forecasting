@@ -65,7 +65,7 @@ class API:
 if __name__ == '__main__':
     api = API()
     print(api.client._get_earliest_valid_timestamp(
-        symbol='BTCUSDT', interval='1m'))
+        symbol='BNBETH', interval='1m'))
     print(binance.client.convert_ts_str('now UTC'))
     time.sleep(60)
     print(binance.client.convert_ts_str('now UTC'))

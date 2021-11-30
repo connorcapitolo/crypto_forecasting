@@ -45,6 +45,10 @@ class TokenData(BaseModel):
     username: Optional[str] = None
 
 
+class Symbol(BaseModel):
+    symbol: str
+
+
 class Pagination:
     page_number: int
     page_size: int

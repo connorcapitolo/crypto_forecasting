@@ -23,9 +23,9 @@ pytest = "*"
 pytest-asyncio = "*"
 google-auth = "*"
 tensorflow = "*"
-celery = {extras = ["redis"], version = "*"}
 python-binance = "*"
 nest-asyncio = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.8"
