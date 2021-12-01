@@ -379,7 +379,26 @@ Baseline - Persistent Model:
 Current Model - LSTM on Raw Standardized Features:
 
 - For Multi-input, Single-output predicts the Close Price of the next time step based on the input features of the previous X time steps
+
+<p>
+<figure>
+  <img width="268" alt="Screen Shot 2021-11-30 at 20 23 11" src="https://user-images.githubusercontent.com/70768567/144164911-240bcff3-597b-4eca-ba07-5ea0f187e8e7.png" title="Multi-Input, Single-Output LSTM" height="500">
+  <figcaption>Multi-Input, Single-Output LSTM</figcaption>
+</figure>
+</p>
+
+
+
 - For Multi-input, Single-output predicts the Close Price of the X next time steps based on the input features of the previous X time steps
+
+<p>
+<figure>
+<img width="433" alt="Screen Shot 2021-11-30 at 20 25 04" src="https://user-images.githubusercontent.com/70768567/144164929-f914cc8e-77fe-4617-9092-580c7ae1bfc4.png" title="Multi-Input, Multi-Output LSTM" height = "500">
+  <figcaption>Multi-Input, Multi-Output LSTM</figcaption>
+</figure>
+</p>
+
+
 
 Currently in Progress - LSTM on Engineered Features
 
