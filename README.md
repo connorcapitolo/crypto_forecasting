@@ -1,8 +1,7 @@
 # Crypto Forecasting App 
 Authors: Connor Capitolo, David Assaraf, Tale Lokvenec, Jiahui Tang
 
-For a view of the GitHub repo used for development, [see here](https://github.com/AC215/cypbros-app)
-- this provides a full commit history as well as the work of each team member
+For a view of the GitHub repo used for development, [see here](https://github.com/AC215/cypbros-app). This provides a full commit history as well as the work of each team member.
 
 ## Problem Definition
 
