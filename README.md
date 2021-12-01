@@ -178,6 +178,7 @@ timestamp = :timestamp, updated_at = 1500604800000
 ## Re-Deploying App On GCP with Ansible 
 
 *For deploying from scratch to GCP with Ansible, please follow the [detailed step-by-step instructions outlined here](https://github.com/dlops-io/mushroom-app/tree/06-deployment)*
+- **you will need to perform this originally in order to obtain the *secrets* folder**
 
 *Notes that when re-deploying, it should take around 10-15 minutes to get everything up and running again; when deploying for the first time, it takes about 1.5-2 hours since it's over an hour for the containers to be built and pushed to GCR*
 
@@ -279,6 +280,7 @@ timestamp = :timestamp, updated_at = 1500604800000
 ## Step-by-step Guide for Deployment of Kubernetes Cluster
 
 These instructions directly follow the detailed, step-by-step guidelines from [Deploy Mushroom App to K8s Cluster](https://github.com/dlops-io/mushroom-app/tree/08-mushroom-app-k8s-deployment)
+- **you must ensure that you have the *secrets* folder stored locally (should not be pushed to Github), which can be found by following [this guide](https://github.com/dlops-io/mushroom-app/tree/06-deployment)**
 
 ### API's to enable in GCP for Project
 Search for each of these in the GCP search bar and click *enable* to utilize these APIs:
