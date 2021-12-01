@@ -181,7 +181,7 @@ timestamp = :timestamp, updated_at = 1500604800000
 
 ### At this point, you should see our Crypto Forecasting Web App!
 
-## Re-Deploying App On GCP with Ansible 
+## Re-Deploying Docker Containers On GCP with Ansible 
 
 *For deploying from scratch to GCP with Ansible, please follow the [detailed step-by-step instructions outlined here](https://github.com/dlops-io/mushroom-app/tree/06-deployment)*
 - **you will need to perform this originally in order to obtain the *secrets* folder**
@@ -282,6 +282,164 @@ timestamp = :timestamp, updated_at = 1500604800000
     - For some reason, doesn't work to just click on the External IP from the GCP Compute Engine page
 
 ![Screen Shot 2021-11-30 at 12 15 38 PM](https://user-images.githubusercontent.com/37121874/144095334-048a6b3b-3872-4b73-858f-5b2776f91a22.png)
+
+
+## Deploying a New VM On GCP with Ansible 
+
+*For deploying from scratch to GCP with Ansible, please follow the [detailed step-by-step instructions outlined here](https://github.com/dlops-io/mushroom-app/tree/06-deployment)*
+- **you will need to perform this originally in order to obtain the *secrets* folder**
+
+### Enter the *deployment* docker shell
+
+    ```
+    cd deployment
+    sh docker-shell.sh
+    ```
+
+### Update the `inventory.yml` file by changing the *persistent_disk_name*, *persistent_disk_size*, etc.
+
+![Screen Shot 2021-12-01 at 3 26 15 PM](https://user-images.githubusercontent.com/37121874/144308801-45f6a923-1d26-42d5-ab05-a06e86c49ff1.png)
+
+
+
+### Rebuild and redeploy the images (*only if you have made updates since your previous iteration*)
+    - From *deployment* docker shell, run 
+    ```
+    ansible-playbook deploy-docker-images.yml -i inventory.yml
+    ```
+    - Update the *deployment/.docker-tag* from the *stdout_lines* of the *Print tag* Ansible task
+
+
+### Create the VM on GCP
+
+```
+ansible-playbook deploy-create-instance.yml -i inventory.yml --extra-vars cluster_state=present
+```
+
+- Check that your VM instance is up on the GCP Compute Engine --> VM Instances
+- Once the command runs successfully get the IP address of the compute instance from GCP Console and update the appserver>hosts in inventory.yml file
+- Check that your persistent disk is on GCP through Compute Engine --> Disks
+
+### Add in all the necessary packages to the newly-created VM
+
+```
+ansible-playbook deploy-provision-instance.yml -i inventory.yml
+```
+
+E.g Docker, pip, etc.
+
+
+### Deploy the Docker containers on the VM
+
+  ```
+  ansible-playbook deploy-setup-containers.yml -i inventory.yml
+  ```
+
+- Check that there are four images running in the VM instance by SSHing in and running from its Terminal `sudo docker image ls`
+
+![Screen Shot 2021-11-28 at 8 21 47 PM](https://user-images.githubusercontent.com/37121874/143795092-9937c2d5-bdd2-45be-94e8-143d4605f6f0.png)
+
+- Check that there are four containers running in the VM instance by SSHing in and running from its Terminal `sudo docker container ls`
+
+![Screen Shot 2021-11-28 at 8 23 52 PM](https://user-images.githubusercontent.com/37121874/143795168-2e26e05b-b276-4434-b9a9-cba5159961fa.png)
+
+
+- Look at the logs of api-service by running `sudo docker container logs api-service -f` in VM Terminal to confirm they look similar to this
+    - Should look like this:
+    ```
+    Container is running!!!
+    The following commands are available:
+        uvicorn_server
+            Run the Uvicorn Server
+    2021-11-22 16:44:27.464495: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open 
+    shared object file: No such file or directory
+    2021-11-22 16:44:27.464538: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+    INFO:     Started server process [8]
+    INFO:     Waiting for application startup.
+    INFO:     Application startup complete.
+    INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+    ```
+    - `ctrl+c` out of the log
+- Look at the logs of worker-service by running `sudo docker container logs worker-service -f` in VM Terminal to confirm they look similar to this
+    - Should look like this:
+    ```
+    Container is running!!!
+    The following commands are available:
+        worker
+            Run the Worker Service
+    Starting Worker Service with NUM_PROCESSES: 3
+    Running
+    Symbols: [{'id': 1, 'name': 'BNBBTC', 'status': 0, 'timestamp': None}, {'id': 2, 'name': 'BTCUSDT', 'status': 0, 'timestamp': None}]
+    Fetching history for {'id': 1, 'name': 'BNBBTC', 'status': 0, 'timestamp': None, 'current_status': 'created'}
+    status = :status, updated_at = EXTRACT(EPOCH FROM clock_timestamp()) * 1000
+    fetch_price_history
+    fetch_price_history_async
+    Fetching history for {'id': 2, 'name': 'BTCUSDT', 'status': 0, 'timestamp': None, 'current_status': 'created'}
+    status = :status, updated_at = EXTRACT(EPOCH FROM clock_timestamp()) * 1000
+    fetch_price_history
+    fetch_price_history_async
+    Live stream: {}
+    History stream: {1: {'id': 1, 'name': 'BNBBTC', 'status': 1, 'timestamp': None, 'current_status': 'running'}, 2: {'id': 2, 'name': 'BTCUSDT', 'status': 1, 'timestamp': None, 'current_s
+    tatus': 'running'}}
+    Symbols: {1: {'id': 1, 'name': 'BNBBTC', 'status': 1, 'timestamp': None, 'current_status': 'running'}, 2: {'id': 2, 'name': 'BTCUSDT', 'status': 1, 'timestamp': None, 'current_status':
+    'running'}}
+    ==============================================
+    Fetch timestamps: BTCUSDT 1502942400000 1503542400000
+    ==============================================
+    Querying candles data from _____ until present time, with a frequency update of 1m
+    ==============================================
+    Fetch timestamps: BNBBTC 1500004800000 1500604800000
+    ==============================================
+    Querying candles data from _____ until present time, with a frequency update of 1m
+    Fetched 10001 lines of data in 6.366132736206055 seconds
+    len(bars): 10001
+    Fetched 10001 lines of data in 6.536696672439575 seconds
+    len(bars): 10001
+    timestamp = :timestamp, updated_at = 1500604800000
+    ==============================================
+    Fetch timestamps: BNBBTC 1500604800000 1501204800000
+    ==============================================
+    Querying candles data from _____ until present time, with a frequency update of 1m
+    timestamp = :timestamp, updated_at = 1503542400000
+    ==============================================
+    Fetch timestamps: BTCUSDT 1503542400000 1504142400000
+    ==============================================
+    Querying candles data from _____ until present time, with a frequency update of 1m
+    Symbols: [{'id': 1, 'name': 'BNBBTC', 'status': 1, 'timestamp': 1500604800000}, {'id': 2, 'name': 'BTCUSDT', 'status': 1, 'timestamp': 1503542400000}]
+    Live stream: {}
+    History stream: {1: {'id': 1, 'name': 'BNBBTC', 'status': 1, 'timestamp': 1500604800000, 'current_status': 'running'}, 2: {'id': 2, 'name': 'BTCUSDT', 'status': 1, 'timestamp': 1503542
+    400000, 'current_status': 'running'}}
+    Symbols: {1: {'id': 1, 'name': 'BNBBTC', 'status': 1, 'timestamp': 1500604800000, 'current_status': 'running'}, 2: {'id': 2, 'name': 'BTCUSDT', 'status': 1, 'timestamp': 1503542400000,
+    'current_status': 'running'}}
+    Fetched 10001 lines of data in 5.004459619522095 seconds
+    len(bars): 10001
+    Fetched 10001 lines of data in 5.257245063781738 seconds
+    len(bars): 10001
+    timestamp = :timestamp, updated_at = 1501204800000
+    ==============================================
+    Fetch timestamps: BNBBTC 1501204800000 1501804800000
+    ==============================================
+    ```
+    - `ctrl+c` out of the log
+
+### set up the web server on the compute instance
+
+Going back to the *deployment* Docker shell on local machine
+
+   ```
+   ansible-playbook deploy-setup-webserver.yml -i inventory.yml
+   ```
+   - The output should look similar to this:
+
+   <img width="1419" alt="Screen Shot 2021-11-28 at 8 27 18 PM" src="https://user-images.githubusercontent.com/37121874/143795325-c5dc7c14-4f50-4a45-b938-9774f0313077.png">
+
+
+   
+- Copy the External IP (either from Terminal or from GCP Compute Engine page), and **paste** it into the browser to view the web app!
+    - For some reason, doesn't work to just click on the External IP from the GCP Compute Engine page
+
+![Screen Shot 2021-11-30 at 12 15 38 PM](https://user-images.githubusercontent.com/37121874/144095334-048a6b3b-3872-4b73-858f-5b2776f91a22.png)
+
 
 ## Step-by-step Guide for Deployment of Kubernetes Cluster
 
