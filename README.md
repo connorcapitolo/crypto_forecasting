@@ -331,3 +331,57 @@ Output:
 
 
 ![Screen Shot 2021-11-30 at 11 45 16 AM](https://user-images.githubusercontent.com/37121874/144090246-8a70d009-2ba2-4778-bddf-26c35d7f396d.png)
+
+## Modeling 
+
+### Dataset(s)
+
+Dataset(s)
+
+- Historical data queried from Binance API (dtype: candlesticks)
+- Read time data updating from Binance through a web socket (dtype: candlesticks)
+
+Dataset(s) Size
+
+- Number of datasets: 1,612 (one dataset per pair)
+- Size of dataset per pair (~0.3Gb)
+- Total dataset(s) size (~500Gb)
+
+Dataset(s) Features
+
+- Open Time: Candle Open Time
+- Open: Open Price in Quote Asset Units
+- High: High Price in Quote Asset Units
+- Low: Low Price in Quote Asset Units
+- Close: Close Price in Quote Asset Units
+- Volume: Total Traded Volume in Base Asset Units
+- Close Time: Candle Close Time
+- Quote Asset Volume: Total Traded Volume in Quote Asset Units
+- Number of Trades: Total Number of Trades
+- Taker Buy Base Asset Volume: Taker (Matching Existing Order) Buy Base Asset Volume
+- Taker Buy Quote Asset Volume: Taker (matching Existing Order) Buy Quote Asset Volume
+- Ignore: Safe to Ignore
+
+Initial EDA and modeling performed on the BTC-USDT pair. The model in the final deliverable will be extended to all 1,612 pairs.
+
+Initial Modeling Decisions:
+
+- 90-10 training-validation split
+- Standardize the data (on the whole dataset)
+- Metrics: Mean Squared Error (MSE), Mean Absolute Error (MAE)
+- Prediction on Close Price
+
+Baseline - Persistent Model:
+
+- For Multi-input, Single-output predicts the Close Price of the next time step to be the same as the Close Price of the current time step
+- For Multi-input, Multi-output predicts the Close Price of the next X time steps to be the same as the Close Price of the current time step
+
+Current Model - LSTM on Raw Standardized Features:
+
+- For Multi-input, Single-output predicts the Close Price of the next time step based on the input features of the previous X time steps
+- For Multi-input, Single-output predicts the Close Price of the X next time steps based on the input features of the previous X time steps
+
+Currently in Progress - LSTM on Engineered Features
+
+- Feature Engineering on input data: Log-transformed, Standardized, Time-based features, Statistical features, Domain knowledge - based features)
+- Feature Engineering on output data: Transformed the output feature (Close Price) to “Close Price - Baseline Prediction”
