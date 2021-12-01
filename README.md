@@ -84,6 +84,10 @@ Project Organization
 - yml scripts for automatically starting up a VM instance on GCP, uploading containers to GRC, adding the containers from GCR to the VM, and running the crypto forecasting app on the GCP VM (in the cloud)
     - contains both scripts for both Ansible and Kubernetes
 
+### secrets (not on GitHub)
+- this should only be stored locally as this is private to your particular instance and should not be shared with others
+- allows for connecting to GCP for deployment
+
 ## Example Development Workflow
 
 **When running on your local computer for development, always make sure to run database-server first as api-service and worker-service rely on it!**
