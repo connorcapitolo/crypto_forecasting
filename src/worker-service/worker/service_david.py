@@ -13,9 +13,11 @@ from dataaccess import top_of_book as dataaccess_top_of_book
 from dataaccess import price_history as dataaccess_price_history
 from run_online import save_top_of_book, save_price_history
 
-api_secret = os.environ["BINANCE_SECRETS_KEY"]
-api_key = os.environ["BINANCE_API_KEY"]
-NUM_PROCESSES = 4  # multiprocessing.cpu_count() - 1
+# api_secret = os.environ["BINANCE_SECRETS_KEY"]
+api_secret = "azp8fSpTRWcA0XQ56SCdIKU150Csi70VA77dks0t6au3GcDP4h5KWiwXA8pd3dHg"
+api_key = "XjnjQlvDeaZxjMeGrN3r8Sja7tnKftpGhnAcs6JA7Jw1ZnBte6ZyR8DkkbZ0zSmu"
+# api_key = os.environ["BINANCE_API_KEY"]
+NUM_PROCESSES = multiprocessing.cpu_count() - 1 # 4
 
 
 # Execute with: python -m worker.service_david
