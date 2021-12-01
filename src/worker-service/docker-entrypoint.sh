@@ -13,6 +13,7 @@ worker_production() {
 
 
 export -f worker
+export -f worker_production
 # pipenv install binance
 echo -en "\033[92m
 The following commands are available:
