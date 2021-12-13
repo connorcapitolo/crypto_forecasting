@@ -492,7 +492,14 @@ Output:
 
 ![Screen Shot 2021-11-30 at 11 45 16 AM](https://user-images.githubusercontent.com/37121874/144090246-8a70d009-2ba2-4778-bddf-26c35d7f396d.png)
 
-## Modeling 
+## Modeling
+
+### Modeling Infrastructure
+
+- Original models creation happens in Google Colaboratory Notebook
+- Models are uploaded to the GCS bucket
+- From the GCS bucket, the API queries for the best model to use for real-time predictions
+- The models are re-trained on new, incoming data asyncronously on daily basis
 
 ### Dataset(s)
 
@@ -522,45 +529,33 @@ Dataset(s) Features
 - Taker Buy Quote Asset Volume: Taker (matching Existing Order) Buy Quote Asset Volume
 - Ignore: Safe to Ignore
 
-Initial EDA and modeling performed on the BTC-USDT pair. The model in the final deliverable will be extended to all 1,612 pairs.
+Initial EDA and modeling performed on the BTC-USDT pair. The model in the final deliverable is extended to 5 pairs (BTC-USDT, BNB-BTC, BNB-USDT, ETH-BTC, ETH-USDT). New model training currently possible through the GCS-Google Colaboratory pipeline. However, new model training should be manually executed.
 
-Initial Modeling Decisions:
+Modeling Decisions:
 
-- 90-10 training-validation split
-- Standardize the data (on the whole dataset)
+- 80-10-10 train-validation-test split (HP tuning models)
+- 100-0-0 train-validation-test split (Models pushed to GCS)
+- Feature Engineering for the Tensorflow Modeling:
+    - Remove *Close Time, Open Time, NA*
+    - Time-based features
+    - Statistical features
+    - Domain knlowedge-based features
+    - Log-transform data (numerical features)
+    - Standardize data (whole dataset)
 - Metrics: Mean Squared Error (MSE), Mean Absolute Error (MAE)
-- Prediction on Close Price
+- Prediction: standardized *Mid Price; (Open Price + Close Price)/2*
 
 Baseline - Persistent Model:
 
 - For Multi-input, Single-output predicts the Close Price of the next time step to be the same as the Close Price of the current time step
 - For Multi-input, Multi-output predicts the Close Price of the next X time steps to be the same as the Close Price of the current time step
 
-Current Model - LSTM on Raw Standardized Features:
+Second Iteration - LSTM on Raw Standardized Features:
 
 - For Multi-input, Single-output predicts the Close Price of the next time step based on the input features of the previous X time steps
-
-<p>
-<figure>
-  <img width="268" alt="Screen Shot 2021-11-30 at 20 23 11" src="https://user-images.githubusercontent.com/70768567/144164911-240bcff3-597b-4eca-ba07-5ea0f187e8e7.png" title="Multi-Input, Single-Output LSTM" height="500">
-  <figcaption>Multi-Input, Single-Output LSTM</figcaption>
-</figure>
-</p>
-
-
-
 - For Multi-input, Single-output predicts the Close Price of the X next time steps based on the input features of the previous X time steps
 
-<p>
-<figure>
-<img width="433" alt="Screen Shot 2021-11-30 at 20 25 04" src="https://user-images.githubusercontent.com/70768567/144164929-f914cc8e-77fe-4617-9092-580c7ae1bfc4.png" title="Multi-Input, Multi-Output LSTM" height = "500">
-  <figcaption>Multi-Input, Multi-Output LSTM</figcaption>
-</figure>
-</p>
-
-
-
-Currently in Progress - LSTM on Engineered Features
+Final Model - LSTM on Engineered Features
 
 - Feature Engineering on input data: Log-transformed, Standardized, Time-based features, Statistical features, Domain knowledge - based features)
-- Feature Engineering on output data: Transformed the output feature (Close Price) to “Close Price - Baseline Prediction”
+- Feature Engineering on output data: Transformed the output feature (Close Price) to standardized “*(Open Price + Close Price)/2*”
