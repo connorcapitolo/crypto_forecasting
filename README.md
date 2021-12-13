@@ -531,7 +531,7 @@ Dataset(s) Features
 
 Initial EDA and modeling performed on the BTC-USDT pair. The model in the final deliverable is extended to 5 pairs (BTC-USDT, BNB-BTC, BNB-USDT, ETH-BTC, ETH-USDT). New model training currently possible through the GCS-Google Colaboratory pipeline. However, new model training should be manually executed.
 
-Modeling Decisions:
+### Modeling Decisions
 
 - 80-10-10 train-validation-test split (HP tuning models)
 - 100-0-0 train-validation-test split (Models pushed to GCS)
