@@ -1,0 +1,14 @@
+- name: Configure Cloud SQL
+  hosts: appserver
+  connection: ssh
+  become: true
+
+  tasks:
+    # Setup DB in Cloud SQL
+    - name: Copy db migration scripts
+      copy:
+        src: "../database-server/db"
+        dest: "/conf"
+
+    - name: Run DB migrations using dbmate
+      shell: docker run --rm -it -v /conf/db:/db -e DATABASE_URL=postgres://postgres:welcome123@10.74.144.11/crypbros-db?sslmode=disable amacneil/dbmate up

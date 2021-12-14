@@ -1,0 +1,535 @@
+{
+  "symbol": "BTCUSDT",
+  "history": [
+    {
+      "close_price": 48705.09,
+      "close_time": 1638655199999
+    },
+    {
+      "close_price": 48700.02,
+      "close_time": 1638655259999
+    },
+    {
+      "close_price": 48668.11,
+      "close_time": 1638655319999
+    },
+    {
+      "close_price": 48690.89,
+      "close_time": 1638655379999
+    },
+    {
+      "close_price": 48719.99,
+      "close_time": 1638655439999
+    },
+    {
+      "close_price": 48630.94,
+      "close_time": 1638655499999
+    },
+    {
+      "close_price": 48629.59,
+      "close_time": 1638655559999
+    },
+    {
+      "close_price": 48639.9,
+      "close_time": 1638655619999
+    },
+    {
+      "close_price": 48670.59,
+      "close_time": 1638655679999
+    },
+    {
+      "close_price": 48699.55,
+      "close_time": 1638655739999
+    },
+    {
+      "close_price": 48719.92,
+      "close_time": 1638655799999
+    },
+    {
+      "close_price": 48795.34,
+      "close_time": 1638655859999
+    },
+    {
+      "close_price": 48797.09,
+      "close_time": 1638655919999
+    },
+    {
+      "close_price": 48771.96,
+      "close_time": 1638655979999
+    },
+    {
+      "close_price": 48750.29,
+      "close_time": 1638656039999
+    },
+    {
+      "close_price": 48744.49,
+      "close_time": 1638656099999
+    },
+    {
+      "close_price": 48696.09,
+      "close_time": 1638656159999
+    },
+    {
+      "close_price": 48666.63,
+      "close_time": 1638656219999
+    },
+    {
+      "close_price": 48697.69,
+      "close_time": 1638656279999
+    },
+    {
+      "close_price": 48714.4,
+      "close_time": 1638656339999
+    },
+    {
+      "close_price": 48700.3,
+      "close_time": 1638656399999
+    },
+    {
+      "close_price": 48711.34,
+      "close_time": 1638656459999
+    },
+    {
+      "close_price": 48655.3,
+      "close_time": 1638656519999
+    },
+    {
+      "close_price": 48686.96,
+      "close_time": 1638656579999
+    },
+    {
+      "close_price": 48690.67,
+      "close_time": 1638656639999
+    },
+    {
+      "close_price": 48742.78,
+      "close_time": 1638656699999
+    },
+    {
+      "close_price": 48742.6,
+      "close_time": 1638656759999
+    },
+    {
+      "close_price": 48726.04,
+      "close_time": 1638656819999
+    },
+    {
+      "close_price": 48739.99,
+      "close_time": 1638656879999
+    },
+    {
+      "close_price": 48744.8,
+      "close_time": 1638656939999
+    },
+    {
+      "close_price": 48742,
+      "close_time": 1638656999999
+    },
+    {
+      "close_price": 48756.23,
+      "close_time": 1638657059999
+    },
+    {
+      "close_price": 48799.62,
+      "close_time": 1638657119999
+    },
+    {
+      "close_price": 48899.99,
+      "close_time": 1638657179999
+    },
+    {
+      "close_price": 48999.99,
+      "close_time": 1638657239999
+    },
+    {
+      "close_price": 49269.4,
+      "close_time": 1638657299999
+    },
+    {
+      "close_price": 49165.01,
+      "close_time": 1638657359999
+    },
+    {
+      "close_price": 49055.43,
+      "close_time": 1638657419999
+    },
+    {
+      "close_price": 48977.41,
+      "close_time": 1638657479999
+    },
+    {
+      "close_price": 48906.93,
+      "close_time": 1638657539999
+    },
+    {
+      "close_price": 48799.89,
+      "close_time": 1638657599999
+    },
+    {
+      "close_price": 48851.73,
+      "close_time": 1638657659999
+    },
+    {
+      "close_price": 48977.74,
+      "close_time": 1638657719999
+    },
+    {
+      "close_price": 48929.02,
+      "close_time": 1638657779999
+    },
+    {
+      "close_price": 48991.01,
+      "close_time": 1638657839999
+    },
+    {
+      "close_price": 49063.38,
+      "close_time": 1638657899999
+    },
+    {
+      "close_price": 49150.82,
+      "close_time": 1638657959999
+    },
+    {
+      "close_price": 49171.9,
+      "close_time": 1638658019999
+    },
+    {
+      "close_price": 49113.08,
+      "close_time": 1638658079999
+    },
+    {
+      "close_price": 49042.02,
+      "close_time": 1638658139999
+    },
+    {
+      "close_price": 48973.12,
+      "close_time": 1638658199999
+    },
+    {
+      "close_price": 48999.99,
+      "close_time": 1638658259999
+    },
+    {
+      "close_price": 49027.24,
+      "close_time": 1638658319999
+    },
+    {
+      "close_price": 48992.62,
+      "close_time": 1638658379999
+    },
+    {
+      "close_price": 48959.4,
+      "close_time": 1638658439999
+    },
+    {
+      "close_price": 48986.34,
+      "close_time": 1638658499999
+    },
+    {
+      "close_price": 49019.99,
+      "close_time": 1638658559999
+    },
+    {
+      "close_price": 49095.65,
+      "close_time": 1638658619999
+    },
+    {
+      "close_price": 49146.21,
+      "close_time": 1638658679999
+    },
+    {
+      "close_price": 49197.56,
+      "close_time": 1638658739999
+    },
+    {
+      "close_price": 49207.84,
+      "close_time": 1638658799999
+    },
+    {
+      "close_price": 49315.67,
+      "close_time": 1638658859999
+    },
+    {
+      "close_price": 49243.88,
+      "close_time": 1638658919999
+    },
+    {
+      "close_price": 49240.13,
+      "close_time": 1638658979999
+    },
+    {
+      "close_price": 49247.72,
+      "close_time": 1638659039999
+    },
+    {
+      "close_price": 49352.5,
+      "close_time": 1638659099999
+    },
+    {
+      "close_price": 49318.46,
+      "close_time": 1638659159999
+    },
+    {
+      "close_price": 49319.35,
+      "close_time": 1638659219999
+    },
+    {
+      "close_price": 49433.85,
+      "close_time": 1638659279999
+    },
+    {
+      "close_price": 49401.92,
+      "close_time": 1638659339999
+    },
+    {
+      "close_price": 49436,
+      "close_time": 1638659399999
+    },
+    {
+      "close_price": 49387.77,
+      "close_time": 1638659459999
+    },
+    {
+      "close_price": 49310.58,
+      "close_time": 1638659519999
+    },
+    {
+      "close_price": 49150,
+      "close_time": 1638659579999
+    },
+    {
+      "close_price": 49154.67,
+      "close_time": 1638659639999
+    },
+    {
+      "close_price": 49153.3,
+      "close_time": 1638659699999
+    },
+    {
+      "close_price": 49194.27,
+      "close_time": 1638659759999
+    },
+    {
+      "close_price": 49176.1,
+      "close_time": 1638659819999
+    },
+    {
+      "close_price": 49204.57,
+      "close_time": 1638659879999
+    },
+    {
+      "close_price": 49233.49,
+      "close_time": 1638659939999
+    },
+    {
+      "close_price": 49242.48,
+      "close_time": 1638659999999
+    },
+    {
+      "close_price": 49132.21,
+      "close_time": 1638660059999
+    },
+    {
+      "close_price": 49100,
+      "close_time": 1638660119999
+    },
+    {
+      "close_price": 49099.55,
+      "close_time": 1638660179999
+    },
+    {
+      "close_price": 49118.29,
+      "close_time": 1638660239999
+    },
+    {
+      "close_price": 49107.94,
+      "close_time": 1638660299999
+    },
+    {
+      "close_price": 49104.34,
+      "close_time": 1638660359999
+    },
+    {
+      "close_price": 49125.99,
+      "close_time": 1638660419999
+    },
+    {
+      "close_price": 49065,
+      "close_time": 1638660479999
+    },
+    {
+      "close_price": 49103.97,
+      "close_time": 1638660539999
+    },
+    {
+      "close_price": 49117.46,
+      "close_time": 1638660599999
+    },
+    {
+      "close_price": 49084.35,
+      "close_time": 1638660659999
+    },
+    {
+      "close_price": 49017.66,
+      "close_time": 1638660719999
+    },
+    {
+      "close_price": 48949.19,
+      "close_time": 1638660779999
+    },
+    {
+      "close_price": 48946.99,
+      "close_time": 1638660839999
+    },
+    {
+      "close_price": 48956.09,
+      "close_time": 1638660899999
+    },
+    {
+      "close_price": 49004.6,
+      "close_time": 1638660959999
+    },
+    {
+      "close_price": 49094.82,
+      "close_time": 1638661019999
+    },
+    {
+      "close_price": 49113.7,
+      "close_time": 1638661079999
+    },
+    {
+      "close_price": 49108.5,
+      "close_time": 1638661139999
+    }
+  ],
+  "predictions": [
+    {
+      "close_price": 49209.25,
+      "close_time": 1638661199999
+    },
+    {
+      "close_price": 49219.7734375,
+      "close_time": 1638661259999
+    },
+    {
+      "close_price": 49166.80859375,
+      "close_time": 1638661319999
+    },
+    {
+      "close_price": 49171.99609375,
+      "close_time": 1638661379999
+    },
+    {
+      "close_price": 49159.46875,
+      "close_time": 1638661439999
+    },
+    {
+      "close_price": 49150.89453125,
+      "close_time": 1638661499999
+    },
+    {
+      "close_price": 49137.26953125,
+      "close_time": 1638661559999
+    },
+    {
+      "close_price": 49144.4921875,
+      "close_time": 1638661619999
+    },
+    {
+      "close_price": 49140.125,
+      "close_time": 1638661679999
+    },
+    {
+      "close_price": 49119.015625,
+      "close_time": 1638661739999
+    },
+    {
+      "close_price": 49130.421875,
+      "close_time": 1638661799999
+    },
+    {
+      "close_price": 49122.36328125,
+      "close_time": 1638661859999
+    },
+    {
+      "close_price": 49134.2421875,
+      "close_time": 1638661919999
+    },
+    {
+      "close_price": 49146.54296875,
+      "close_time": 1638661979999
+    },
+    {
+      "close_price": 49122.37890625,
+      "close_time": 1638662039999
+    },
+    {
+      "close_price": 49145.8359375,
+      "close_time": 1638662099999
+    },
+    {
+      "close_price": 49130.56640625,
+      "close_time": 1638662159999
+    },
+    {
+      "close_price": 49138.69140625,
+      "close_time": 1638662219999
+    },
+    {
+      "close_price": 49136.01171875,
+      "close_time": 1638662279999
+    },
+    {
+      "close_price": 49103.34765625,
+      "close_time": 1638662339999
+    },
+    {
+      "close_price": 49084.203125,
+      "close_time": 1638662399999
+    },
+    {
+      "close_price": 49069.515625,
+      "close_time": 1638662459999
+    },
+    {
+      "close_price": 49072.21484375,
+      "close_time": 1638662519999
+    },
+    {
+      "close_price": 49063.0703125,
+      "close_time": 1638662579999
+    },
+    {
+      "close_price": 49065.3125,
+      "close_time": 1638662639999
+    },
+    {
+      "close_price": 49058.69921875,
+      "close_time": 1638662699999
+    },
+    {
+      "close_price": 49068.43359375,
+      "close_time": 1638662759999
+    },
+    {
+      "close_price": 49072.37890625,
+      "close_time": 1638662819999
+    },
+    {
+      "close_price": 49061.0625,
+      "close_time": 1638662879999
+    },
+    {
+      "close_price": 49065.6484375,
+      "close_time": 1638662939999
+    },
+    {
+      "close_price": 49068.4296875,
+      "close_time": 1638662999999
+    },
+    {
+      "close_price": 49053.4609375,
+      "close_time": 1638663059999
+    }
+  ]
+}
