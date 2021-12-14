@@ -543,7 +543,7 @@ Initial EDA and modeling performed on the BTC-USDT pair. The model in the final 
     - Log-transform data (numerical features)
     - Standardize data (whole dataset)
 - Metrics: Mean Squared Error (MSE), Mean Absolute Error (MAE)
-- Prediction: standardized *Mid Price; (Open Price + Close Price)/2*
+- Prediction: standardized `mid_price_true - mid_price_baseline`
 
 Baseline - Persistent Model:
 
@@ -558,4 +558,4 @@ Second Iteration - LSTM on Raw Standardized Features:
 Final Model - LSTM on Engineered Features
 
 - Feature Engineering on input data: Log-transformed, Standardized, Time-based features, Statistical features, Domain knowledge - based features)
-- Feature Engineering on output data: Transformed the output feature (Close Price) to standardized “*(Open Price + Close Price)/2*”
+- Feature Engineering on output data: Transformed the output feature to standardized `mid_price_true - mid_price_baseline`
