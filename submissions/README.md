@@ -5,4 +5,4 @@ For a view of the GitHub repo used for development, [see here](https://github.co
 
 **Video Presentation** could be found [here](https://www.youtube.com/watch?v=83oW1w7aSZw)
 
-**Medium Post** could be found [here](https://medium.com/@jiahuitang_79209/crypto-forecasting-app-59575b084caf)
+**Medium Post** could be found [here](https://medium.com/@tangjiahui/crypto-forecasting-app-59575b084caf)
