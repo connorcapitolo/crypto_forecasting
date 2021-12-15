@@ -3,6 +3,11 @@ Authors: Connor Capitolo, David Assaraf, Tale Lokvenec, Jiahui Tang
 
 For a view of the GitHub repo used for development, [see here](https://github.com/AC215/cypbros-app). This provides a full commit history as well as the work of each team member.
 
+**Video Presentation** could be found [here](https://www.youtube.com/watch?v=83oW1w7aSZw)
+
+**Medium Post** could be found [here](https://medium.com/@jiahuitang_79209/crypto-forecasting-app-59575b084caf)
+
+
 ## Problem Definition
 
 The current state of the crypto market is extremely volatile. Due to lack of experience and involvement from traditional actors, there is a lack of systematic investment strategies in the crypto environment; therefore, there is an opportunity to extract value from an accurate prediction of the price dynamics of pairs. 
